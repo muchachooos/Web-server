@@ -6,6 +6,13 @@ import (
 	"os"
 )
 
+type User struct {
+	login    string
+	password string
+}
+
+var dataBase []User
+
 func main() {
 	router := gin.New()
 
@@ -15,12 +22,25 @@ func main() {
 	router.GET("/toxicity_page", MyHandler3)
 	router.GET("/toxicity_rus_page", MyHandler4)
 
-	router.GET("/login_page", pageHandler)
+	router.GET("/login_page", PageHandler)
 	router.POST("/login", LoginHandler)
+	router.POST("/registration", RegistrationHandler)
 
 	router.Run("localhost:8080")
 }
-func pageHandler(context *gin.Context) {
+
+func RegistrationHandler(context *gin.Context) {
+	user, _ := context.GetQuery("username")
+	pas, _ := context.GetQuery("password")
+
+	dataBase = append(dataBase, User{user, pas})
+
+	//fmt.Println(user, pas)
+	context.Writer.WriteString("OK")
+	//context.Writer.Write([]byte("OK"))
+}
+
+func PageHandler(context *gin.Context) {
 	html, _ := os.ReadFile("./html/page_with_authorization.html")
 	context.Writer.Write(html)
 }
@@ -29,7 +49,7 @@ func LoginHandler(context *gin.Context) {
 	user, _ := context.GetQuery("username")
 	pas, _ := context.GetQuery("password")
 	fmt.Println(user, pas)
-	context.Writer.WriteString("OK")
+	context.Writer.WriteString("Welcome to the club Body")
 	//context.Writer.Write([]byte("OK"))
 }
 
