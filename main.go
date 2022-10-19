@@ -10,10 +10,10 @@ func main() {
 	router := gin.New()
 
 	router.GET("", MyHandler)
-	router.GET("/1page_with_text", MyHandler1)
-	router.GET("/2page_with_text", MyHandler2)
-	router.GET("/3page_with_text", MyHandler3)
-	router.GET("/4page_with_text", MyHandler4)
+	router.GET("/chop_suey_page", MyHandler1)
+	router.GET("/chop_suey_rus_page", MyHandler2)
+	router.GET("/toxicity_page", MyHandler3)
+	router.GET("/toxicity_rus_page", MyHandler4)
 
 	router.GET("/login_page", pageHandler)
 	router.POST("/login", LoginHandler)
@@ -41,8 +41,6 @@ func MyHandler(context *gin.Context) {
 func MyHandler1(context *gin.Context) {
 	html, _ := os.ReadFile("./html/1page_with_text.html")
 	context.Writer.Write(html)
-	//t, _ := context.GetQuery("some_key")
-	//context.Writer.WriteString("Ebal4" + t + " Ebala")
 }
 
 func MyHandler2(context *gin.Context) {
