@@ -1,4 +1,4 @@
 POST http://localhost:8080/1page_with_text?some_key=4f&key2=jfhde&key3=54
 
 ###
-POST http://localhost:8080/login?username=pidor&password=der_parol
+POST http://localhost:8080/registration?username=pidor&password=der_parol
