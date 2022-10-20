@@ -16,9 +16,9 @@ func main() {
 	router.GET("/toxicity_rus_page", MyHandler4)
 
 	router.GET("/login_page", PageLogHandler)
-	router.POST("/login", LoginHandler)
+	router.GET("/login", LoginHandler)
 	router.GET("/registration_page", PageRegHandler)
-	router.POST("/registration", RegistrationHandler)
+	router.GET("/registration", RegistrationHandler)
 
 	router.Run("localhost:8080")
 }
@@ -33,14 +33,23 @@ var dataBase []User
 func RegistrationHandler(context *gin.Context) {
 	user, _ := context.GetQuery("username")
 	pass, _ := context.GetQuery("password")
+
 	dataBase = append(dataBase, User{user, pass})
+
 	context.Writer.WriteString("Welcome to the club Body")
 	//context.Writer.Write([]byte("OK"))
+
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAA")
+	fmt.Println(context.Request.RequestURI)
+	fmt.Println(dataBase)
+	fmt.Println(user)
+	fmt.Println(pass)
 }
 
 func LoginHandler(context *gin.Context) {
 	user, _ := context.GetQuery("username")
 	pas, _ := context.GetQuery("password")
+	fmt.Println("1111111")
 	fmt.Println(user, pas)
 	context.Writer.WriteString("Welcome to the club Body")
 	//context.Writer.Write([]byte("OK"))
