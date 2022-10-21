@@ -33,21 +33,13 @@ var dataBase []User
 func RegistrationHandler(context *gin.Context) {
 
 	user, ok := context.GetQuery("username") //Достаём Query-параметр(user = key(username))
-	if user == "" {
-		context.Writer.WriteString("No username")
-		return
-	}
-	if ok == false {
+	if user == "" && ok == false {
 		context.Writer.WriteString("No username")
 		return
 	}
 
 	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
-	if pass == "" {
-		context.Writer.WriteString("No password")
-		return
-	}
-	if ok == false {
+	if pass == "" && ok == false {
 		context.Writer.WriteString("No password")
 		return
 	}
@@ -75,21 +67,13 @@ func RegistrationHandler(context *gin.Context) {
 func LoginHandler(context *gin.Context) {
 
 	user, ok := context.GetQuery("username")
-	if user == "" {
-		context.Writer.WriteString("No username")
-		return
-	}
-	if ok == false {
+	if user == "" && ok == false {
 		context.Writer.WriteString("No username")
 		return
 	}
 
 	pass, ok := context.GetQuery("password")
-	if pass == "" {
-		context.Writer.WriteString("No password")
-		return
-	}
-	if ok == false {
+	if pass == "" && ok == false {
 		context.Writer.WriteString("No password")
 		return
 	}
