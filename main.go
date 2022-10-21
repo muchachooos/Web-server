@@ -33,13 +33,13 @@ var dataBase []User
 func RegistrationHandler(context *gin.Context) {
 
 	user, ok := context.GetQuery("username") //Достаём Query-параметр(user = key(username))
-	if user == "" || ok == false {
+	if user == "" || !ok {                   //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No username")
 		return
 	}
 
 	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
-	if pass == "" || ok == false {
+	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No password")
 		return
 	}
@@ -60,36 +60,39 @@ func RegistrationHandler(context *gin.Context) {
 	context.Writer.WriteString("Welcome to the club Body")
 	//context.Writer.Write([]byte("OK"))
 
-	fmt.Println("----------------------------")
+	fmt.Println("-------RegistrationHandler---------")
 	fmt.Println(dataBase)
 }
 
 func LoginHandler(context *gin.Context) {
 
 	user, ok := context.GetQuery("username")
-	if user == "" || ok == false {
+	if user == "" || !ok { //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No username")
 		return
 	}
 
 	pass, ok := context.GetQuery("password")
-	if pass == "" || ok == false {
+	if pass == "" || !ok { //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No password")
 		return
 	}
 
 	for i := range dataBase {
 		if user != dataBase[i].login {
+			fmt.Println("------------")
+			fmt.Println(user, pass)
 			context.Writer.WriteString("Wrong login or password. Try again")
 			return
 		}
 		if pass != dataBase[i].password {
+			fmt.Println(user, pass)
 			context.Writer.WriteString("Wrong login or password. Try again")
 			return
 		}
 	}
 
-	fmt.Println("111---------------------------111")
+	fmt.Println("-------LoginHandler---------")
 	fmt.Println(user, pass)
 	context.Writer.WriteString("Welcome to the club Body")
 	//context.Writer.Write([]byte("OK"))
