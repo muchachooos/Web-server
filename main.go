@@ -31,26 +31,82 @@ type User struct {
 var dataBase []User
 
 func RegistrationHandler(context *gin.Context) {
-	user, _ := context.GetQuery("username")
-	pass, _ := context.GetQuery("password")
+
+	user, ok := context.GetQuery("username") //Достаём Query-параметр(user = key(username))
+	if user == "" {
+		context.Writer.WriteString("No username")
+		return
+	}
+	if ok == false {
+		context.Writer.WriteString("No username")
+		return
+	}
+
+	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
+	if pass == "" {
+		context.Writer.WriteString("No password")
+		return
+	}
+	if ok == false {
+		context.Writer.WriteString("No password")
+		return
+	}
+
+	for i := range dataBase {
+		if user == dataBase[i].login {
+			context.Writer.WriteString("This login already exist. Try again")
+			return
+		}
+		if pass == dataBase[i].password {
+			context.Writer.WriteString("This password already exist. Try again")
+			return
+		}
+	}
 
 	dataBase = append(dataBase, User{user, pass})
 
 	context.Writer.WriteString("Welcome to the club Body")
 	//context.Writer.Write([]byte("OK"))
 
-	fmt.Println("AAAAAAAAAAAAAAAAAAAAAA")
-	fmt.Println(context.Request.RequestURI)
+	fmt.Println("----------------------------")
 	fmt.Println(dataBase)
-	fmt.Println(user)
-	fmt.Println(pass)
 }
 
 func LoginHandler(context *gin.Context) {
-	user, _ := context.GetQuery("username")
-	pas, _ := context.GetQuery("password")
-	fmt.Println("1111111")
-	fmt.Println(user, pas)
+
+	user, ok := context.GetQuery("username")
+	if user == "" {
+		context.Writer.WriteString("No username")
+		return
+	}
+	if ok == false {
+		context.Writer.WriteString("No username")
+		return
+	}
+
+	pass, ok := context.GetQuery("password")
+	if pass == "" {
+		context.Writer.WriteString("No password")
+		return
+	}
+	if ok == false {
+		context.Writer.WriteString("No password")
+		return
+	}
+
+	for i := range dataBase {
+		if user != dataBase[i].login {
+			context.Writer.WriteString("Wrong login or password. Try again")
+			return
+		}
+		if pass != dataBase[i].password {
+			context.Writer.WriteString("Wrong login or password. Try again")
+			return
+		}
+	}
+
+	fmt.Println("111---------------------------111")
+	fmt.Println(user, pass)
 	context.Writer.WriteString("Welcome to the club Body")
 	//context.Writer.Write([]byte("OK"))
 }
