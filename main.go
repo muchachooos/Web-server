@@ -79,22 +79,16 @@ func LoginHandler(context *gin.Context) {
 	}
 
 	for i := range dataBase {
-		if user != dataBase[i].login {
-			fmt.Println("------------")
+		if user == dataBase[i].login && pass == dataBase[i].password {
 			fmt.Println(user, pass)
-			context.Writer.WriteString("Wrong login or password. Try again")
-			return
-		}
-		if pass != dataBase[i].password {
-			fmt.Println(user, pass)
-			context.Writer.WriteString("Wrong login or password. Try again")
+			context.Writer.WriteString("Welcome to the club Body")
 			return
 		}
 	}
 
 	fmt.Println("-------LoginHandler---------")
 	fmt.Println(user, pass)
-	context.Writer.WriteString("Welcome to the club Body")
+	context.Writer.WriteString("Wrong login or password. Try again")
 	//context.Writer.Write([]byte("OK"))
 }
 
