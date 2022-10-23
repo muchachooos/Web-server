@@ -8,3 +8,6 @@ GET http://localhost:8080/registration?username=&password=
 
 ###
 POST http://localhost:8080/registration
+
+###
+GET http://localhost:8080/sort?array=1111&array=22222&array=DJSLWWD
