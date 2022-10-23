@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -19,6 +20,8 @@ func main() {
 	router.GET("/login", LoginHandler)
 	router.GET("/registration_page", PageRegHandler)
 	router.GET("/registration", RegistrationHandler)
+
+	router.GET("/sort", ArraySortHandler)
 
 	router.Run("localhost:8080")
 }
@@ -63,7 +66,6 @@ func RegistrationHandler(context *gin.Context) {
 	fmt.Println("-------RegistrationHandler---------")
 	fmt.Println(dataBase)
 }
-
 func LoginHandler(context *gin.Context) {
 
 	user, ok := context.GetQuery("username")
@@ -90,6 +92,18 @@ func LoginHandler(context *gin.Context) {
 	fmt.Println(user, pass)
 	context.Writer.WriteString("Wrong login or password. Try again")
 	//context.Writer.Write([]byte("OK"))
+}
+
+func ArraySortHandler(context *gin.Context) {
+	values := context.Request.URL.Query()
+
+	// достаём срез из строк
+	slice := values["array"]
+
+	// превращаем строку в число
+	integer, _ := strconv.Atoi(slice[0])
+
+	fmt.Println(integer)
 }
 
 func PageRegHandler(context *gin.Context) {
