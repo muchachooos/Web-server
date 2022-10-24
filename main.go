@@ -33,6 +33,43 @@ type User struct {
 
 var dataBase []User
 
+func ArraySortHandler(context *gin.Context) {
+	values := context.Request.URL.Query()
+
+	// достаём срез из строк
+	slice := values["array"]
+
+	// превращаем строку в число
+	integer, _ := strconv.Atoi(slice[0])
+	integer1, _ := strconv.Atoi(slice[1])
+	integer2, _ := strconv.Atoi(slice[2])
+
+	arr := []int{integer, integer1, integer2}
+
+	context.Writer.WriteString("Welcome to the club Body")
+
+	fmt.Println("int = ", integer)
+
+	fmt.Println("slice = ", slice)
+
+	fmt.Println("val = ", values)
+
+	fmt.Println(bubbleSort(arr))
+}
+
+func bubbleSort(slice []int) []int {
+	for i := 0; i < len(slice)-1; i++ {
+		for j := 0; j < len(slice)-i-1; j++ {
+			if slice[j] > slice[j+1] {
+				fmt.Println(slice)
+				slice[j], slice[j+1] = slice[j+1], slice[j]
+				fmt.Println(slice)
+			}
+		}
+	}
+	return slice
+}
+
 func RegistrationHandler(context *gin.Context) {
 
 	user, ok := context.GetQuery("username") //Достаём Query-параметр(user = key(username))
@@ -92,18 +129,6 @@ func LoginHandler(context *gin.Context) {
 	fmt.Println(user, pass)
 	context.Writer.WriteString("Wrong login or password. Try again")
 	//context.Writer.Write([]byte("OK"))
-}
-
-func ArraySortHandler(context *gin.Context) {
-	values := context.Request.URL.Query()
-
-	// достаём срез из строк
-	slice := values["array"]
-
-	// превращаем строку в число
-	integer, _ := strconv.Atoi(slice[0])
-
-	fmt.Println(integer)
 }
 
 func PageRegHandler(context *gin.Context) {
