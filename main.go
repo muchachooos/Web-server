@@ -21,7 +21,8 @@ func main() {
 	router.GET("/registration_page", PageRegHandler)
 	router.GET("/registration", RegistrationHandler)
 
-	router.GET("/sort", ArraySortHandler)
+	router.GET("/sort_slice_page", SortHandler)
+	router.GET("/sort_slice", ArraySortHandler)
 
 	router.Run("localhost:8080")
 }
@@ -129,6 +130,10 @@ func LoginHandler(context *gin.Context) {
 	fmt.Println(user, pass)
 	context.Writer.WriteString("Wrong login or password. Try again")
 	//context.Writer.Write([]byte("OK"))
+}
+func SortHandler(context *gin.Context) {
+	html, _ := os.ReadFile("./html/sort_slice_page.html")
+	context.Writer.Write(html)
 }
 
 func PageRegHandler(context *gin.Context) {
