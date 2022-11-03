@@ -142,6 +142,25 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 		return
 	}
 
+	if pass == newPass {
+		context.Writer.WriteString("Incorrect new password")
+		return
+	}
+
+	var resultTable []Data
+
+	err = s.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
+	if err != nil {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Status(500)
+		return
+	}
+
+	if len(resultTable) == 0 {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		return
+	}
+
 	res, err := s.DataBase.Exec("UPDATE users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
 	if err != nil {
 		context.Writer.WriteString("Wrong login or password. Try again")
