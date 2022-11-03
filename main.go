@@ -80,3 +80,32 @@ func RegistrationHandler(context *gin.Context) {
 //	context.Writer.WriteString("No password")
 //	return
 //}
+
+//log
+//
+//user, ok := context.GetQuery("username")
+//if user == "" || !ok { //ok == false; Поверка на пустые значения
+//	context.Writer.WriteString("No username")
+//	return
+//}
+//
+//pass, ok := context.GetQuery("password")
+//if pass == "" || !ok { //ok == false; Поверка на пустые значения
+//	context.Writer.WriteString("No password")
+//	return
+//}
+//
+//for i := range dataBaseArr {
+//	if user == dataBaseArr[i].login && pass == dataBaseArr[i].password {
+//		fmt.Println(user, pass)
+//		context.Writer.WriteString("Welcome to the club Body")
+//		return
+//	}
+//}
+
+//type User struct {
+//	login    string
+//	password string
+//}
+//
+//var dataBaseArr []User
