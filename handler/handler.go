@@ -6,6 +6,9 @@ import (
 	"main/sort"
 	"os"
 	"strconv"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 type User struct {
@@ -13,7 +16,17 @@ type User struct {
 	password string
 }
 
-var dataBase []User
+var dataBaseArr []User
+
+type Server struct {
+	DataBase *sqlx.DB
+}
+
+type Data struct {
+	ID       int    `db:"id"`
+	Login    string `db:"login"`
+	Password string `db:"password"`
+}
 
 func ArraySortHandler(context *gin.Context) {
 	values := context.Request.URL.Query()
@@ -27,7 +40,6 @@ func ArraySortHandler(context *gin.Context) {
 
 	for i := range slice {
 		val, err = strconv.Atoi(slice[i])
-
 		if err != nil {
 			context.Writer.WriteString("Error! Contains string")
 			return
@@ -44,39 +56,58 @@ func ArraySortHandler(context *gin.Context) {
 	context.Writer.WriteString("Bubble sort: " + fmt.Sprint(sorted))
 }
 
-func RegistrationHandler(context *gin.Context) {
-	user, ok := context.GetQuery("username") //Достаём Query-параметр(user = key(username))
-	if user == "" || !ok {                   //ok == false; Поверка на пустые значения
+func (s *Server) RegistrationHandler(context *gin.Context) {
+
+	var err error
+
+	a, ok := context.GetQuery("username") //Достаём Query-параметр(a = key(username))
+	if a == "" || !ok {                   //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No username")
 		return
 	}
 
-	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
-	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
+	b, ok := context.GetQuery("password") //Достаём Query-параметр(b = key(password))
+	if b == "" || !ok {                   //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No password")
 		return
 	}
 
-	for i := range dataBase {
-		if user == dataBase[i].login {
-			context.Writer.WriteString("This login already exist. Try again")
-			return
-		}
-		if pass == dataBase[i].password {
-			context.Writer.WriteString("This password already exist. Try again")
-			return
-		}
+	_, err = s.DataBase.Exec("INSERT INTO users(login, password) VALUES (?,?)", a, b) //Добавляем значения в БД
+	if err != nil {
+		context.Writer.WriteString("This login already exist. Try again")
+		context.Status(500)
+		return
 	}
-
-	dataBase = append(dataBase, User{user, pass})
 
 	context.Writer.WriteString("Welcome to the club Body")
 }
 
-func LoginHandler(context *gin.Context) {
+func (s *Server) LoginHandler(context *gin.Context) {
 
-	user, ok := context.GetQuery("username")
-	if user == "" || !ok { //ok == false; Поверка на пустые значения
+	var err error
+
+	//user, ok := context.GetQuery("username")
+	//if user == "" || !ok { //ok == false; Поверка на пустые значения
+	//	context.Writer.WriteString("No username")
+	//	return
+	//}
+	//
+	//pass, ok := context.GetQuery("password")
+	//if pass == "" || !ok { //ok == false; Поверка на пустые значения
+	//	context.Writer.WriteString("No password")
+	//	return
+	//}
+	//
+	//for i := range dataBaseArr {
+	//	if user == dataBaseArr[i].login && pass == dataBaseArr[i].password {
+	//		fmt.Println(user, pass)
+	//		context.Writer.WriteString("Welcome to the club Body")
+	//		return
+	//	}
+	//}
+
+	log, ok := context.GetQuery("username")
+	if log == "" || !ok { //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No username")
 		return
 	}
@@ -87,15 +118,19 @@ func LoginHandler(context *gin.Context) {
 		return
 	}
 
-	for i := range dataBase {
-		if user == dataBase[i].login && pass == dataBase[i].password {
-			fmt.Println(user, pass)
-			context.Writer.WriteString("Welcome to the club Body")
-			return
-		}
+	var resultTable []Data
+
+	//Возвращаем значение по логину(с) и паролю(d) или ошибку
+	err = s.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
+	if err != nil {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Status(500)
+		return
 	}
 
-	context.Writer.WriteString("Wrong login or password. Try again")
+	fmt.Println(resultTable)
+
+	context.Writer.WriteString("Welcome to the club Body")
 }
 
 func SortHandler(context *gin.Context) {
