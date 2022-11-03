@@ -21,32 +21,6 @@ type Data struct {
 	Password string `db:"password"`
 }
 
-func (s *Server) RegistrationHandler(context *gin.Context) {
-
-	var err error
-
-	a, ok := context.GetQuery("username") //Достаём Query-параметр(a = key(username))
-	if a == "" || !ok {                   //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No username")
-		return
-	}
-
-	b, ok := context.GetQuery("password") //Достаём Query-параметр(b = key(password))
-	if b == "" || !ok {                   //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No password")
-		return
-	}
-
-	_, err = s.DataBase.Exec("INSERT INTO users(login, password) VALUES (?,?)", a, b) //Добавляем значения в БД
-	if err != nil {
-		context.Writer.WriteString("This login already exist. Try again")
-		context.Status(500)
-		return
-	}
-
-	context.Writer.WriteString("Welcome to the club Body")
-}
-
 func (s *Server) LoginHandler(context *gin.Context) {
 
 	var err error
@@ -65,7 +39,7 @@ func (s *Server) LoginHandler(context *gin.Context) {
 
 	var resultTable []Data
 
-	//Возвращаем значение по логину(с) и паролю(d) или ошибку
+	//Возвращаем значение по логину(log) и паролю(pass) или ошибку
 	err = s.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
 		context.Writer.WriteString("Wrong login or password. Try again")
@@ -78,12 +52,121 @@ func (s *Server) LoginHandler(context *gin.Context) {
 		return
 	}
 
-	fmt.Println(resultTable)
+	context.Writer.WriteString("Welcome to the club Body")
+}
+
+func (s *Server) RegistrationHandler(context *gin.Context) {
+
+	var err error
+
+	log, ok := context.GetQuery("username") //Достаём Query-параметр(log = key(username))
+	if log == "" || !ok {                   //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No username")
+		return
+	}
+
+	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
+	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No password")
+		return
+	}
+
+	_, err = s.DataBase.Exec("INSERT INTO users(login, password) VALUES (?,?)", log, pass) //Добавляем значения в БД
+	if err != nil {
+		context.Writer.WriteString("This login already exist. Try again")
+		context.Status(500)
+		return
+	}
 
 	context.Writer.WriteString("Welcome to the club Body")
 }
 
-func ArraySortHandler(context *gin.Context) {
+func (s *Server) DeleteHandler(context *gin.Context) {
+
+	var err error
+
+	log, ok := context.GetQuery("username") //Достаём Query-параметр(log = key(username))
+	if log == "" || !ok {                   //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No username")
+		return
+	}
+
+	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
+	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No password")
+		return
+	}
+
+	res, err := s.DataBase.Exec("DELETE FROM users WHERE login = ? AND password = ?", log, pass) //Удаляем значения из БД
+	if err != nil {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Status(500)
+		return
+	}
+
+	countOfDeletedRows, err := res.RowsAffected()
+	if err != nil {
+		context.Writer.WriteString("Something went wrong")
+		context.Status(500)
+		return
+	}
+
+	if countOfDeletedRows == 0 {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Status(500)
+		return
+	}
+
+	context.Writer.WriteString("Welcome to the club Body")
+}
+
+func (s *Server) ChangeHandler(context *gin.Context) {
+
+	var err error
+
+	log, ok := context.GetQuery("username") //Достаём Query-параметр(log = key(username))
+	if log == "" || !ok {                   //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No username")
+		return
+	}
+
+	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
+	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No password")
+		return
+	}
+
+	newPass, ok := context.GetQuery("newPassword") //Достаём Query-параметр(newPass = key(newPassword))
+	if newPass == "" || !ok {                      //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No new password")
+		return
+	}
+
+	res, err := s.DataBase.Exec("UPDATE users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
+	if err != nil {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Status(500)
+		return
+	}
+
+	countOfDeletedRows, err := res.RowsAffected()
+	if err != nil {
+		context.Writer.WriteString("Something went wrong")
+		context.Status(500)
+		return
+	}
+
+	if countOfDeletedRows == 0 {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Status(500)
+		return
+	}
+
+	context.Writer.WriteString("Welcome to the club Body")
+
+}
+
+func SortHandler(context *gin.Context) {
 	values := context.Request.URL.Query()
 
 	// достаём срез из строк
@@ -111,8 +194,8 @@ func ArraySortHandler(context *gin.Context) {
 	context.Writer.WriteString("Bubble sort: " + fmt.Sprint(sorted))
 }
 
-func SortHandler(context *gin.Context) {
-	html, _ := os.ReadFile("./resources/html/sort_slice_page.html")
+func PageLogHandler(context *gin.Context) {
+	html, _ := os.ReadFile("./resources/html/page_with_authorization.html")
 	context.Writer.Write(html)
 }
 
@@ -121,8 +204,18 @@ func PageRegHandler(context *gin.Context) {
 	context.Writer.Write(html)
 }
 
-func PageLogHandler(context *gin.Context) {
-	html, _ := os.ReadFile("./resources/html/page_with_authorization.html")
+func PageDelHandler(context *gin.Context) {
+	html, _ := os.ReadFile("./resources/html/delete_user_page.html")
+	context.Writer.Write(html)
+}
+
+func PageChangeHandler(context *gin.Context) {
+	html, _ := os.ReadFile("./resources/html/change_pass_page.html")
+	context.Writer.Write(html)
+}
+
+func PageSortHandler(context *gin.Context) {
+	html, _ := os.ReadFile("./resources/html/sort_slice_page.html")
 	context.Writer.Write(html)
 }
 
