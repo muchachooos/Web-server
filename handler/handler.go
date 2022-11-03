@@ -11,13 +11,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type User struct {
-	login    string
-	password string
-}
-
-var dataBaseArr []User
-
 type Server struct {
 	DataBase *sqlx.DB
 }
@@ -26,34 +19,6 @@ type Data struct {
 	ID       int    `db:"id"`
 	Login    string `db:"login"`
 	Password string `db:"password"`
-}
-
-func ArraySortHandler(context *gin.Context) {
-	values := context.Request.URL.Query()
-
-	// достаём срез из строк
-	slice := values["array"]
-
-	var arr []int
-	var val int
-	var err error
-
-	for i := range slice {
-		val, err = strconv.Atoi(slice[i])
-		if err != nil {
-			context.Writer.WriteString("Error! Contains string")
-			return
-		}
-	}
-
-	for i := range slice {
-		val, _ = strconv.Atoi(slice[i]) // превращаем строку в число
-		arr = append(arr, val)
-	}
-
-	sorted := sort.BubbleSort(arr)
-
-	context.Writer.WriteString("Bubble sort: " + fmt.Sprint(sorted))
 }
 
 func (s *Server) RegistrationHandler(context *gin.Context) {
@@ -86,26 +51,6 @@ func (s *Server) LoginHandler(context *gin.Context) {
 
 	var err error
 
-	//user, ok := context.GetQuery("username")
-	//if user == "" || !ok { //ok == false; Поверка на пустые значения
-	//	context.Writer.WriteString("No username")
-	//	return
-	//}
-	//
-	//pass, ok := context.GetQuery("password")
-	//if pass == "" || !ok { //ok == false; Поверка на пустые значения
-	//	context.Writer.WriteString("No password")
-	//	return
-	//}
-	//
-	//for i := range dataBaseArr {
-	//	if user == dataBaseArr[i].login && pass == dataBaseArr[i].password {
-	//		fmt.Println(user, pass)
-	//		context.Writer.WriteString("Welcome to the club Body")
-	//		return
-	//	}
-	//}
-
 	log, ok := context.GetQuery("username")
 	if log == "" || !ok { //ok == false; Поверка на пустые значения
 		context.Writer.WriteString("No username")
@@ -128,9 +73,42 @@ func (s *Server) LoginHandler(context *gin.Context) {
 		return
 	}
 
+	if len(resultTable) == 0 {
+		context.Writer.WriteString("Wrong login or password. Try again")
+		return
+	}
+
 	fmt.Println(resultTable)
 
 	context.Writer.WriteString("Welcome to the club Body")
+}
+
+func ArraySortHandler(context *gin.Context) {
+	values := context.Request.URL.Query()
+
+	// достаём срез из строк
+	slice := values["array"]
+
+	var arr []int
+	var val int
+	var err error
+
+	for i := range slice {
+		val, err = strconv.Atoi(slice[i])
+		if err != nil {
+			context.Writer.WriteString("Error! Contains string")
+			return
+		}
+	}
+
+	for i := range slice {
+		val, _ = strconv.Atoi(slice[i]) // превращаем строку в число
+		arr = append(arr, val)
+	}
+
+	sorted := sort.BubbleSort(arr)
+
+	context.Writer.WriteString("Bubble sort: " + fmt.Sprint(sorted))
 }
 
 func SortHandler(context *gin.Context) {
