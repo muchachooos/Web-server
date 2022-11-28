@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	router := gin.New()
+	router := gin.Default()
 
 	//Подключаемся к SQL и DB
 	dataBase, err := sqlx.Open("mysql", "root:040498usa_wot@tcp(127.0.0.1:3306)/userdata")
@@ -44,5 +44,9 @@ func main() {
 	router.GET("/sort_slice_page", handler.PageSortHandler)
 	router.GET("/sort_slice", handler.SortHandler)
 
-	router.Run("localhost:8080")
+	err = router.Run()
+	if err != nil {
+		panic(err)
+		return
+	}
 }
