@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -13,6 +14,12 @@ func main() {
 	//Подключаемся к SQL и DB
 	dataBase, err := sqlx.Open("mysql", "root:040498@tcp(127.0.0.1:3306)/UserData")
 	if err != nil {
+		panic(err)
+		return
+	}
+
+	if dataBase == nil {
+		fmt.Println("AAAAAA")
 		panic(err)
 		return
 	}
