@@ -12,7 +12,7 @@ func main() {
 	router := gin.Default()
 
 	//Подключаемся к SQL и DB
-	dataBase, err := sqlx.Open("mysql", "root:040498@tcp(127.0.0.1:3306)/UserData")
+	dataBase, err := sqlx.Open("mysql", "web_admin:040498@tcp(127.0.0.1:3306)/UserData")
 	if err != nil {
 		panic(err)
 		return
