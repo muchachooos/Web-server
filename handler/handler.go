@@ -25,9 +25,9 @@ func (s *Server) LoginHandler(context *gin.Context) {
 
 	var err error
 
-	log, ok := context.GetQuery("username")
+	log, ok := context.GetQuery("login")
 	if log == "" || !ok { //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No username")
+		context.Writer.WriteString("No login")
 		return
 	}
 
@@ -40,15 +40,15 @@ func (s *Server) LoginHandler(context *gin.Context) {
 	var resultTable []Data
 
 	//Возвращаем значение по логину(log) и паролю(pass) или ошибку
-	err = s.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
+	err = s.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
-		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Writer.WriteString("1.Wrong login or password. Try again")
 		context.Status(500)
 		return
 	}
 
 	if len(resultTable) == 0 {
-		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Writer.WriteString("2.Wrong login or password. Try again")
 		return
 	}
 
@@ -59,9 +59,9 @@ func (s *Server) RegistrationHandler(context *gin.Context) {
 
 	var err error
 
-	log, ok := context.GetQuery("username") //Достаём Query-параметр(log = key(username))
-	if log == "" || !ok {                   //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No username")
+	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
+	if log == "" || !ok {                //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No login")
 		return
 	}
 
@@ -71,7 +71,7 @@ func (s *Server) RegistrationHandler(context *gin.Context) {
 		return
 	}
 
-	_, err = s.DataBase.Exec("INSERT INTO users(login, password) VALUES (?,?)", log, pass) //Добавляем значения в БД
+	_, err = s.DataBase.Exec("INSERT INTO Users (login, password) VALUES (?,?)", log, pass) //Добавляем значения в БД
 	if err != nil {
 		context.Writer.WriteString("This login already exist. Try again")
 		context.Status(500)
@@ -85,9 +85,9 @@ func (s *Server) DeleteHandler(context *gin.Context) {
 
 	var err error
 
-	log, ok := context.GetQuery("username") //Достаём Query-параметр(log = key(username))
-	if log == "" || !ok {                   //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No username")
+	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
+	if log == "" || !ok {                //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No login")
 		return
 	}
 
@@ -97,7 +97,7 @@ func (s *Server) DeleteHandler(context *gin.Context) {
 		return
 	}
 
-	res, err := s.DataBase.Exec("DELETE FROM users WHERE login = ? AND password = ?", log, pass) //Удаляем значения из БД
+	res, err := s.DataBase.Exec("DELETE FROM Users WHERE login = ? AND password = ?", log, pass) //Удаляем значения из БД
 	if err != nil {
 		context.Writer.WriteString("Wrong login or password. Try again")
 		context.Status(500)
@@ -124,9 +124,9 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 
 	var err error
 
-	log, ok := context.GetQuery("username") //Достаём Query-параметр(log = key(username))
-	if log == "" || !ok {                   //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No username")
+	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
+	if log == "" || !ok {                //ok == false; Поверка на пустые значения
+		context.Writer.WriteString("No login")
 		return
 	}
 
@@ -151,19 +151,19 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 
 	err = s.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
-		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Writer.WriteString("1.Wrong login or password. Try again")
 		context.Status(500)
 		return
 	}
 
 	if len(resultTable) == 0 {
-		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Writer.WriteString("2.Wrong login or password. Try again")
 		return
 	}
 
 	res, err := s.DataBase.Exec("UPDATE users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
 	if err != nil {
-		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Writer.WriteString("3.Wrong login or password. Try again")
 		context.Status(500)
 		return
 	}
@@ -176,7 +176,7 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 	}
 
 	if countOfDeletedRows == 0 {
-		context.Writer.WriteString("Wrong login or password. Try again")
+		context.Writer.WriteString("4.Wrong login or password. Try again")
 		context.Status(500)
 		return
 	}
