@@ -149,7 +149,7 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 
 	var resultTable []Data
 
-	err = s.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
+	err = s.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
 		context.Writer.WriteString("1.Wrong login or password. Try again")
 		context.Status(500)
@@ -161,7 +161,7 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 		return
 	}
 
-	res, err := s.DataBase.Exec("UPDATE users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
+	res, err := s.DataBase.Exec("UPDATE Users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
 	if err != nil {
 		context.Writer.WriteString("3.Wrong login or password. Try again")
 		context.Status(500)
