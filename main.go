@@ -6,12 +6,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"main/handler"
+	"main/storage"
 )
 
 func main() {
 	router := gin.Default()
 
-	//Подключаемся к SQL и DB
 	dataBase, err := sqlx.Open("mysql", "web_admin:040498@tcp(127.0.0.1:3306)/UserData")
 	if err != nil {
 		panic(err)
@@ -19,13 +19,15 @@ func main() {
 	}
 
 	if dataBase == nil {
-		fmt.Println("AAAAAA")
+		fmt.Println("dB nil")
 		panic(err)
 		return
 	}
 
 	server := handler.Server{
-		dataBase,
+		Storage: &storage.UserStorage{
+			DataBase: dataBase,
+		},
 	}
 
 	router.GET("", handler.MyHandler)
