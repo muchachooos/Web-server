@@ -8,121 +8,107 @@ import (
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
 )
 
-type Server struct {
-	DataBase *sqlx.DB
-}
+//type Data struct {
+//	ID       int    `db:"id"`
+//	Login    string `db:"login"`
+//	Password string `db:"password"`
+//}
 
-type Data struct {
-	ID       int    `db:"id"`
-	Login    string `db:"login"`
-	Password string `db:"password"`
-}
+//func (s *Server) LoginHandler(context *gin.Context) {
+//
+//	log, ok := context.GetQuery("login")
+//	if log == "" || !ok { //ok == false; Поверка на пустые значения
+//		context.Writer.WriteString("No login")
+//		return
+//	}
+//
+//	pass, ok := context.GetQuery("password")
+//	if pass == "" || !ok { //ok == false; Поверка на пустые значения
+//		context.Writer.WriteString("No password")
+//		return
+//	}
+//
+//	var resultTable []Data
+//
+//	err := s.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
+//	if err != nil {
+//		context.Writer.WriteString("1.Wrong login or password. Try again")
+//		context.Status(500)
+//		return
+//	}
+//
+//	if len(resultTable) == 0 {
+//		context.Writer.WriteString("2.Wrong login or password. Try again")
+//		return
+//	}
+//
+//	context.Writer.WriteString("Welcome to the club Body")
+//}
 
-func (s *Server) LoginHandler(context *gin.Context) {
+//func (s *Server) RegistrationHandler(context *gin.Context) {
+//
+//	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
+//	if log == "" || !ok {                //ok == false; Поверка на пустые значения
+//		context.Writer.WriteString("No login")
+//		return
+//	}
+//
+//	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
+//	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
+//		context.Writer.WriteString("No password")
+//		return
+//	}
+//
+//	_, err := s.DataBase.Exec("INSERT INTO Users (login, password) VALUES (?,?)", log, pass) //Добавляем значения в БД
+//	if err != nil {
+//		context.Writer.WriteString("This login already exist. Try again")
+//		context.Status(500)
+//		return
+//	}
+//
+//	context.Writer.WriteString("Welcome to the club Body")
+//}
 
-	var err error
-
-	log, ok := context.GetQuery("login")
-	if log == "" || !ok { //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No login")
-		return
-	}
-
-	pass, ok := context.GetQuery("password")
-	if pass == "" || !ok { //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No password")
-		return
-	}
-
-	var resultTable []Data
-
-	//Возвращаем значение по логину(log) и паролю(pass) или ошибку
-	err = s.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
-	if err != nil {
-		context.Writer.WriteString("1.Wrong login or password. Try again")
-		context.Status(500)
-		return
-	}
-
-	if len(resultTable) == 0 {
-		context.Writer.WriteString("2.Wrong login or password. Try again")
-		return
-	}
-
-	context.Writer.WriteString("Welcome to the club Body")
-}
-
-func (s *Server) RegistrationHandler(context *gin.Context) {
-
-	var err error
-
-	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
-	if log == "" || !ok {                //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No login")
-		return
-	}
-
-	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
-	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No password")
-		return
-	}
-
-	_, err = s.DataBase.Exec("INSERT INTO Users (login, password) VALUES (?,?)", log, pass) //Добавляем значения в БД
-	if err != nil {
-		context.Writer.WriteString("This login already exist. Try again")
-		context.Status(500)
-		return
-	}
-
-	context.Writer.WriteString("Welcome to the club Body")
-}
-
-func (s *Server) DeleteHandler(context *gin.Context) {
-
-	var err error
-
-	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
-	if log == "" || !ok {                //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No login")
-		return
-	}
-
-	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
-	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
-		context.Writer.WriteString("No password")
-		return
-	}
-
-	res, err := s.DataBase.Exec("DELETE FROM Users WHERE login = ? AND password = ?", log, pass) //Удаляем значения из БД
-	if err != nil {
-		context.Writer.WriteString("Wrong login or password. Try again")
-		context.Status(500)
-		return
-	}
-
-	countOfDeletedRows, err := res.RowsAffected()
-	if err != nil {
-		context.Writer.WriteString("Something went wrong")
-		context.Status(500)
-		return
-	}
-
-	if countOfDeletedRows == 0 {
-		context.Writer.WriteString("Wrong login or password. Try again")
-		context.Status(500)
-		return
-	}
-
-	context.Writer.WriteString("Welcome to the club Body")
-}
+//func (s *Server) DeleteHandler(context *gin.Context) {
+//
+//	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
+//	if log == "" || !ok {                //ok == false; Поверка на пустые значения
+//		context.Writer.WriteString("No login")
+//		return
+//	}
+//
+//	pass, ok := context.GetQuery("password") //Достаём Query-параметр(pass = key(password))
+//	if pass == "" || !ok {                   //ok == false; Поверка на пустые значения
+//		context.Writer.WriteString("No password")
+//		return
+//	}
+//
+//	res, err := s.DataBase.Exec("DELETE FROM Users WHERE login = ? AND password = ?", log, pass) //Удаляем значения из БД
+//	if err != nil {
+//		context.Writer.WriteString("Wrong login or password. Try again")
+//		context.Status(500)
+//		return
+//	}
+//
+//	countOfDeletedRows, err := res.RowsAffected()
+//	if err != nil {
+//		context.Writer.WriteString("Something went wrong")
+//		context.Status(500)
+//		return
+//	}
+//
+//	if countOfDeletedRows == 0 {
+//		context.Writer.WriteString("Wrong login or password. Try again")
+//		context.Status(500)
+//		return
+//	}
+//
+//	context.Writer.WriteString("Welcome to the club Body")
+//}
 
 func (s *Server) ChangeHandler(context *gin.Context) {
-
-	var err error
 
 	log, ok := context.GetQuery("login") //Достаём Query-параметр(log = key(username))
 	if log == "" || !ok {                //ok == false; Поверка на пустые значения
@@ -149,7 +135,7 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 
 	var resultTable []Data
 
-	err = s.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
+	err := s.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
 		context.Writer.WriteString("1.Wrong login or password. Try again")
 		context.Status(500)
@@ -186,6 +172,7 @@ func (s *Server) ChangeHandler(context *gin.Context) {
 }
 
 func SortHandler(context *gin.Context) {
+
 	values := context.Request.URL.Query()
 
 	// достаём срез из строк
