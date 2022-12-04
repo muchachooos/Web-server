@@ -1,8 +1,8 @@
 package storage
 
-import "main/model"
+import "Web-server/model"
 
-func (u *UserStorage) GetUserInDB(log, pass string) ([]model.Data, error) {
+func (u *UserStorage) GetLoginUserInDB(log, pass string) ([]model.Data, error) {
 
 	var resultTable []model.Data
 
@@ -14,7 +14,7 @@ func (u *UserStorage) GetUserInDB(log, pass string) ([]model.Data, error) {
 	return resultTable, nil
 }
 
-func (u *UserStorage) CreateUserInBD(log, pass string) error {
+func (u *UserStorage) RegistrationUserInBD(log, pass string) error {
 
 	_, err := u.DataBase.Exec("INSERT INTO users (login, password) VALUES (?,?)", log, pass)
 	if err != nil {
@@ -37,6 +37,36 @@ func (u *UserStorage) DeleteUserFromDB(log, pass string) (bool, error) {
 	}
 
 	if countOfDeletedRows == 0 {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (u *UserStorage) ChangePassUserInDB(log, pass, newPass string) (bool, error) {
+
+	var resultTable []model.Data
+
+	err := u.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
+	if err != nil {
+		return false, err
+	}
+
+	if len(resultTable) == 0 {
+		return false, err
+	}
+
+	res, err := u.DataBase.Exec("UPDATE users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
+	if err != nil {
+		return false, err
+	}
+
+	countOfChangedRows, err := res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+
+	if countOfChangedRows == 0 {
 		return false, err
 	}
 
