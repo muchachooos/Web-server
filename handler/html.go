@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
 )
@@ -58,6 +59,8 @@ func PageSortHandler(context *gin.Context) {
 func MyHandler(context *gin.Context) {
 	html, err := os.ReadFile("./resources/html/main_page.html")
 	if err != nil {
+		context.Writer.WriteString("AAAAAAAAAAAA")
+		fmt.Println("AAAAAAAAAA:", err)
 		context.Status(500)
 		return
 	}
