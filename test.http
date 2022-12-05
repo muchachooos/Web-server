@@ -11,3 +11,9 @@ POST http://34.125.93.142:80/registration
 
 ###
 GET http://34.125.93.142:80/sort?array=1111&array=22222&array=DJSLWWD
+
+###
+GET localhost:80
+
+###
+GET 34.125.93.142:80
