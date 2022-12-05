@@ -7,7 +7,7 @@ import (
 )
 
 func PageLogHandler(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/page_with_authorization.html")
+	html, err := os.ReadFile("../resources/html/page_with_authorization.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -17,7 +17,7 @@ func PageLogHandler(context *gin.Context) {
 }
 
 func PageRegHandler(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/page_with_registration.html")
+	html, err := os.ReadFile("../resources/html/page_with_registration.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -27,7 +27,7 @@ func PageRegHandler(context *gin.Context) {
 }
 
 func PageDelHandler(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/delete_user_page.html")
+	html, err := os.ReadFile("../resources/html/delete_user_page.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -37,7 +37,7 @@ func PageDelHandler(context *gin.Context) {
 }
 
 func PageChangeHandler(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/change_pass_page.html")
+	html, err := os.ReadFile("../resources/html/change_pass_page.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -47,7 +47,7 @@ func PageChangeHandler(context *gin.Context) {
 }
 
 func PageSortHandler(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/sort_slice_page.html")
+	html, err := os.ReadFile("../resources/html/sort_slice_page.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -57,11 +57,11 @@ func PageSortHandler(context *gin.Context) {
 }
 
 func MyHandler(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/main_page.html")
+	html, err := os.ReadFile("../resources/html/main_page.html")
 	if err != nil {
-		context.Writer.WriteString("AAAAAAAAAAAA")
 		fmt.Println("AAAAAAAAAA:", err)
 		context.Status(500)
+		context.Writer.WriteString("AAAAAAAAAAAA")
 		return
 	}
 
@@ -69,7 +69,7 @@ func MyHandler(context *gin.Context) {
 }
 
 func MyHandler1(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/1page_with_text.html")
+	html, err := os.ReadFile("../resources/html/1page_with_text.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -79,7 +79,7 @@ func MyHandler1(context *gin.Context) {
 }
 
 func MyHandler2(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/2page_with_text.html")
+	html, err := os.ReadFile("../resources/html/2page_with_text.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -89,7 +89,7 @@ func MyHandler2(context *gin.Context) {
 }
 
 func MyHandler3(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/3page_with_text.html")
+	html, err := os.ReadFile("../resources/html/3page_with_text.html")
 	if err != nil {
 		context.Status(500)
 		return
@@ -99,7 +99,7 @@ func MyHandler3(context *gin.Context) {
 }
 
 func MyHandler4(context *gin.Context) {
-	html, err := os.ReadFile("./resources/html/4page_with_text.html")
+	html, err := os.ReadFile("../resources/html/4page_with_text.html")
 	if err != nil {
 		context.Status(500)
 		return
