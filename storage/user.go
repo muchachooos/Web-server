@@ -6,7 +6,7 @@ func (u *UserStorage) GetLoginUserInDB(log, pass string) ([]model.Data, error) {
 
 	var resultTable []model.Data
 
-	err := u.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
+	err := u.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
 		return nil, err
 	}
@@ -16,7 +16,7 @@ func (u *UserStorage) GetLoginUserInDB(log, pass string) ([]model.Data, error) {
 
 func (u *UserStorage) RegistrationUserInBD(log, pass string) error {
 
-	_, err := u.DataBase.Exec("INSERT INTO users (login, password) VALUES (?,?)", log, pass)
+	_, err := u.DataBase.Exec("INSERT INTO Users (login, password) VALUES (?,?)", log, pass)
 	if err != nil {
 		return err
 	}
@@ -26,7 +26,7 @@ func (u *UserStorage) RegistrationUserInBD(log, pass string) error {
 
 func (u *UserStorage) DeleteUserFromDB(log, pass string) (bool, error) {
 
-	res, err := u.DataBase.Exec("DELETE FROM users WHERE login = ? AND password = ?", log, pass)
+	res, err := u.DataBase.Exec("DELETE FROM Users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
 		return false, err
 	}
@@ -47,7 +47,7 @@ func (u *UserStorage) ChangePassUserInDB(log, pass, newPass string) (bool, error
 
 	var resultTable []model.Data
 
-	err := u.DataBase.Select(&resultTable, "SELECT * FROM users WHERE login = ? AND password = ?", log, pass)
+	err := u.DataBase.Select(&resultTable, "SELECT * FROM Users WHERE login = ? AND password = ?", log, pass)
 	if err != nil {
 		return false, err
 	}
@@ -56,7 +56,7 @@ func (u *UserStorage) ChangePassUserInDB(log, pass, newPass string) (bool, error
 		return false, err
 	}
 
-	res, err := u.DataBase.Exec("UPDATE users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
+	res, err := u.DataBase.Exec("UPDATE Users SET password = ? WHERE login = ? AND password = ?", newPass, log, pass)
 	if err != nil {
 		return false, err
 	}
