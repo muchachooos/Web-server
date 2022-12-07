@@ -4,7 +4,7 @@ POST http://34.125.93.142:80/1page_with_text?some_key=4f&key2=jfhde&key3=54
 POST http://localhost:80/registration?login=pidor&password=der_parol
 
 ###
-GET http://34.125.93.142:80/registration?login=AAAAAAAAAAAAAAAAAAA&password=AAAAAAAAAAAAAAAAAAAAAAA
+GET http://34.125.93.142:80/registration?login=AAA&password=AAAAAAAAAAAAAAAAA
 
 ###
 POST http://34.125.93.142:80/registration
