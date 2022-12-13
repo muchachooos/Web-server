@@ -8,13 +8,13 @@ import (
 func (s *Server) LoginHandler(context *gin.Context) {
 
 	log, ok := context.GetQuery("login")
-	if log == "" || !ok { //ok == false; Поверка на пустые значения
+	if log == "" || !ok {
 		context.Writer.WriteString("No login")
 		return
 	}
 
 	pass, ok := context.GetQuery("password")
-	if pass == "" || !ok { //ok == false; Поверка на пустые значения
+	if pass == "" || !ok {
 		context.Writer.WriteString("No password")
 		return
 	}
